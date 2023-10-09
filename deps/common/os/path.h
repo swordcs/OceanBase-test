@@ -27,7 +27,7 @@ namespace common {
  * input: ""            --> return : ""
  */
 std::string getFileName(const std::string &fullPath);
-void getFileName(const char *path, std::string &fileName);
+void        getFileName(const char *path, std::string &fileName);
 
 /**
  * get file path from full path
@@ -38,7 +38,7 @@ void getFileName(const char *path, std::string &fileName);
  * input: ""            --> return : ""
  */
 std::string getFilePath(const std::string &fullPath);
-void getDirName(const char *path, std::string &parent);
+void        getDirName(const char *path, std::string &parent);
 
 /**
  *  Get absolute path
@@ -58,7 +58,11 @@ bool is_directory(const char *path);
  * @return 创建失败，或者不是文件夹将会返回失败
  */
 bool check_directory(std::string &path);
-
+/**
+ * 递归删除文件路径
+ * @return 删除文件失败
+ */
+bool remove_directory(std::string &path);
 /**
  * 列出指定文件夹下符合指定模式的所有文件
  * @param filter_pattern  示例 ^miniob.*bin$

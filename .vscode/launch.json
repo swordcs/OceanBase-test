@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "miDebuggerPath": "/usr/bin/gdb",
             "name": "(gdb) 启动",
             "type": "cppdbg",
             "request": "launch",

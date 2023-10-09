@@ -37,18 +37,11 @@ void DefaultHandler::set_default(DefaultHandler *handler)
   default_handler = handler;
 }
 
-DefaultHandler &DefaultHandler::get_default()
-{
-  return *default_handler;
-}
+DefaultHandler &DefaultHandler::get_default() { return *default_handler; }
 
-DefaultHandler::DefaultHandler()
-{}
+DefaultHandler::DefaultHandler() {}
 
-DefaultHandler::~DefaultHandler() noexcept
-{
-  destroy();
-}
+DefaultHandler::~DefaultHandler() noexcept { destroy(); }
 
 RC DefaultHandler::init(const char *base_dir)
 {
@@ -61,7 +54,7 @@ RC DefaultHandler::init(const char *base_dir)
   }
 
   base_dir_ = base_dir;
-  db_dir_ = tmp + "/";
+  db_dir_   = tmp + "/";
 
   const char *sys_db = "sys";
 
@@ -117,7 +110,23 @@ RC DefaultHandler::create_db(const char *dbname)
 
 RC DefaultHandler::drop_db(const char *dbname)
 {
-  return RC::INTERNAL;
+  if (nullptr == dbname || common::is_blank(dbname)) {
+    LOG_WARN("Invalid db name");
+    return RC::INVALID_ARGUMENT;
+  }
+  // 如果对应名录不存在，返回错误
+  std::string dbpath = db_dir_ + dbname;
+  if (!common::is_directory(dbpath.c_str())) {
+    LOG_WARN("Db not exists: %s", dbname);
+    return RC::SCHEMA_DB_NOT_EXIST;
+  }
+
+  if (!common::remove_directory(dbpath)) {
+    LOG_WARN("Db path remove failed: %s", dbpath);
+    return RC::INTERNAL;
+  }
+
+  return RC::SUCCESS;
 }
 
 RC DefaultHandler::open_db(const char *dbname)
@@ -137,8 +146,8 @@ RC DefaultHandler::open_db(const char *dbname)
   }
 
   // open db
-  Db *db = new Db();
-  RC ret = RC::SUCCESS;
+  Db *db  = new Db();
+  RC  ret = RC::SUCCESS;
   if ((ret = db->init(dbname, dbpath.c_str())) != RC::SUCCESS) {
     LOG_ERROR("Failed to open db: %s. error=%s", dbname, strrc(ret));
     delete db;
@@ -148,15 +157,9 @@ RC DefaultHandler::open_db(const char *dbname)
   return ret;
 }
 
-RC DefaultHandler::close_db(const char *dbname)
-{
-  return RC::UNIMPLENMENT;
-}
+RC DefaultHandler::close_db(const char *dbname) { return RC::UNIMPLENMENT; }
 
-RC DefaultHandler::execute(const char *sql)
-{
-  return RC::UNIMPLENMENT;
-}
+RC DefaultHandler::execute(const char *sql) { return RC::UNIMPLENMENT; }
 
 RC DefaultHandler::create_table(
     const char *dbname, const char *relation_name, int attribute_count, const AttrInfoSqlNode *attributes)
@@ -168,10 +171,7 @@ RC DefaultHandler::create_table(
   return db->create_table(relation_name, attribute_count, attributes);
 }
 
-RC DefaultHandler::drop_table(const char *dbname, const char *relation_name)
-{
-  return RC::UNIMPLENMENT;
-}
+RC DefaultHandler::drop_table(const char *dbname, const char *relation_name) { return RC::UNIMPLENMENT; }
 
 Db *DefaultHandler::find_db(const char *dbname) const
 {
@@ -201,7 +201,7 @@ RC DefaultHandler::sync()
   RC rc = RC::SUCCESS;
   for (const auto &db_pair : opened_dbs_) {
     Db *db = db_pair.second;
-    rc = db->sync();
+    rc     = db->sync();
     if (rc != RC::SUCCESS) {
       LOG_ERROR("Failed to sync db. name=%s, rc=%d:%s", db->name(), rc, strrc(rc));
       return rc;
