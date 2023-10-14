@@ -176,6 +176,8 @@ RC PlainCommunicator::write_result_internal(SessionEvent *event, bool &need_disc
     return write_state(event, need_disconnect);
   }
 
+  // 竟然在这里写入数据？“如果当前SQL生成了执行计划，那么在返回客户端时，调用执行计划返回结果。” 
+  // 合理了
   rc = sql_result->open();
   if (OB_FAIL(rc)) {
     sql_result->close();

@@ -35,6 +35,7 @@ RC ExecuteStage::handle_request(SQLStageEvent *sql_event)
 {
   RC rc = RC::SUCCESS;
   const unique_ptr<PhysicalOperator> &physical_operator = sql_event->physical_operator();
+  // 如果需要物理算子，额外处理
   if (physical_operator != nullptr) {
     return handle_request_with_physical_operator(sql_event);
   }
