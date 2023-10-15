@@ -55,6 +55,7 @@ ArithmeticExpr *create_arithmetic_expression(ArithmeticExpr::Type type,
 
 //标识tokens
 %token  SEMICOLON
+        DATE_T
         CREATE
         DROP
         TABLE
@@ -118,6 +119,7 @@ ArithmeticExpr *create_arithmetic_expression(ArithmeticExpr::Type type,
   float                             floats;
 }
 
+%token <string> DATE_STR
 %token <number> NUMBER
 %token <floats> FLOAT
 %token <string> ID

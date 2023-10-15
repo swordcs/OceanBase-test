@@ -22,6 +22,7 @@ See the Mulan PSL v2 for more details. */
  */
 enum AttrType
 {
+  DATES,
   UNDEFINED,
   CHARS,          ///< 字符串类型
   INTS,           ///< 整数类型(4字节)
