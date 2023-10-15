@@ -1,0 +1,1 @@
+python3 $(pwd)/test/case/miniob_test.py --project-dir $(pwd) --work-dir $(pwd)
