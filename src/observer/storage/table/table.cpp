@@ -127,8 +127,29 @@ RC Table::create(int32_t table_id,
 }
 
 RC Table::destory() {
-  RC rc = RC::SUCCESS;
-  return rc;
+  RC rc = sync();
+
+  if(rc != RC::SUCCESS)
+    return rc;
+  std::string path = table_meta_file(base_dir_.c_str(), name());
+  if (0 != unlink(path.c_str())){
+    LOG_ERROR("Failed to remove meta file=%s, errno=%d", path.c_str(), errno);
+    return RC::INTERNAL;
+  }
+  std::string data_file = base_dir_ + "/" + name() + TABLE_DATA_SUFFIX;
+  if (0 != unlink(data_file.c_str())){
+    LOG_ERROR("Failed to remove data file=%s, errno=%d", data_file.c_str(), errno);
+    return RC::INTERNAL;
+  }
+  const int index_num = table_meta().index_num();
+  for (int i = 0; i > index_num; i++){
+    ((BplusTreeIndex *)indexes_[i])->close();
+    std::string index_file = table_index_file(base_dir_.c_str(), name(), indexes_[i]->index_meta().name());
+    if (0 != unlink(index_file.c_str())){
+      return RC::INTERNAL;
+    }
+  }
+  return RC::SUCCESS;
 }
 
 RC Table::open(const char *meta_file, const char *base_dir)

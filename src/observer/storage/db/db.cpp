@@ -104,7 +104,7 @@ RC Db::create_table(const char *table_name, int attribute_count, const AttrInfoS
 RC Db::drop_table(const char *table_name)
 {
   RC rc = RC::SUCCESS;
-  if (opened_tables_.count(table_name) != 0) {
+  if (opened_tables_.count(table_name) == 0) {
     LOG_WARN("%s has not been opened before.", table_name);
     return RC::SCHEMA_DB_NOT_EXIST;
   }
@@ -119,7 +119,7 @@ RC Db::drop_table(const char *table_name)
   }
   opened_tables_.erase(table_name);
   delete table;
-  LOG_INFO("Drop table success. table name=%s, table_id:%s.", table_name, table->table_id());
+  LOG_INFO("Drop table success. table name=%s.", table_name);
   return RC::SUCCESS;
 }
 
