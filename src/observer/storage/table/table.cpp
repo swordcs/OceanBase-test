@@ -126,6 +126,11 @@ RC Table::create(int32_t table_id,
   return rc;
 }
 
+RC Table::destory() {
+  RC rc = RC::SUCCESS;
+  return rc;
+}
+
 RC Table::open(const char *meta_file, const char *base_dir)
 {
   // 加载元数据文件

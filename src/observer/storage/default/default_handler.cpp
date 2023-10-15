@@ -108,26 +108,7 @@ RC DefaultHandler::create_db(const char *dbname)
   return RC::SUCCESS;
 }
 
-RC DefaultHandler::drop_db(const char *dbname)
-{
-  if (nullptr == dbname || common::is_blank(dbname)) {
-    LOG_WARN("Invalid db name");
-    return RC::INVALID_ARGUMENT;
-  }
-  // 如果对应名录不存在，返回错误
-  std::string dbpath = db_dir_ + dbname;
-  if (!common::is_directory(dbpath.c_str())) {
-    LOG_WARN("Db not exists: %s", dbname);
-    return RC::SCHEMA_DB_NOT_EXIST;
-  }
-
-  if (!common::remove_directory(dbpath)) {
-    LOG_WARN("Db path remove failed: %s", dbpath);
-    return RC::INTERNAL;
-  }
-
-  return RC::SUCCESS;
-}
+RC DefaultHandler::drop_db(const char *dbname) { return RC::INTERNAL; }
 
 RC DefaultHandler::open_db(const char *dbname)
 {
