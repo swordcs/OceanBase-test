@@ -119,6 +119,8 @@ ArithmeticExpr *create_arithmetic_expression(ArithmeticExpr::Type type,
   float                             floats;
 }
 
+// 终结符定义
+
 %token <string> DATE_STR
 %token <number> NUMBER
 %token <floats> FLOAT
@@ -342,6 +344,7 @@ type:
     INT_T      { $$=INTS; }
     | STRING_T { $$=CHARS; }
     | FLOAT_T  { $$=FLOATS; }
+    | DATE_T   { $$=DATES; }
     ;
 insert_stmt:        /*insert   语句的语法解析树*/
     INSERT INTO ID VALUES LBRACE value value_list RBRACE 
@@ -381,6 +384,13 @@ value:
     |FLOAT {
       $$ = new Value((float)$1);
       @$ = @1;
+    }
+    |DATE_STR {
+      char *tmp = common::substr($1,1,strlen($1)-2);
+      Value *v = new Value();
+      value_init_date(v, tmp);
+      $$ = v;
+      free(tmp);
     }
     |SSS {
       char *tmp = common::substr($1,1,strlen($1)-2);
